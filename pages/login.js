@@ -1,8 +1,13 @@
-import React from "react";
+import { useContext, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import AuthContext from "../context/auth/authContext";
+
 function Login() {
+  const authContext = useContext(AuthContext);
+  const { usuarioAutenticado } = authContext;
+
   const formik = useFormik({
     initialValues: {
       email: "",

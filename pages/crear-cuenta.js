@@ -1,8 +1,14 @@
 import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useContext } from "react";
+import AuthContext from "../context/auth/authContext";
+import Alerta from "../components/Alerta";
 
 function CrearCuenta() {
+  const authContext = useContext(AuthContext);
+  const { registrarUsuario, mensaje } = authContext;
+
   const formik = useFormik({
     initialValues: {
       nombre: "",
@@ -19,7 +25,7 @@ function CrearCuenta() {
         .required("La contraseña es requerida"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      registrarUsuario(values);
     },
   });
 
@@ -29,6 +35,7 @@ function CrearCuenta() {
         <h2 className="text-4xl font-sans text-gray-800 text-center my-4">
           Crear Cuenta
         </h2>
+        {mensaje && <Alerta />}
         <div className="flex justify-center mt-5">
           <div className="max-w-lg w-full">
             <form

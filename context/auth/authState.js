@@ -3,10 +3,11 @@ import AuthContext from "./authContext";
 import authReducer from "./authReducer";
 import { types } from "../../types";
 import clienteAxios from "../../config/axios";
+import tokenAuth from "../../config/tokenAuth";
 
 const AuthState = ({ children }) => {
   const initalState = {
-    token: "",
+    token: typeof window !== "undefined" ? localStorage.getItem("token") : "",
     autenticado: null,
     usuario: null,
     mensaje: null,
@@ -36,6 +37,59 @@ const AuthState = ({ children }) => {
     }
   };
 
+  //Autenticar Usuarios
+  const iniciarSesion = async (datos) => {
+    try {
+      const respuesta = await clienteAxios.post("/api/usuarios/login", datos);
+      dispatch({
+        type: types.LOGIN_EXITO,
+        payload: respuesta.data.token,
+      });
+    } catch (error) {
+      dispatch({
+        type: types.LOGIN_ERROR,
+        payload: error.response.data.msg,
+      });
+    }
+    setTimeout(() => {
+      dispatch({
+        type: types.LIMPIAR_MENSAJE,
+      });
+    }, 3000);
+  };
+
+  //Retornar Usuario en base al JWT
+  const usuarioAutenticado = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      tokenAuth(token);
+    }
+
+    try {
+      const respuesta = await clienteAxios("/api/usuarios/login");
+      dispatch({
+        type: types.USUARIO_AUTENTICADO,
+        payload: respuesta.data.usuario,
+      });
+    } catch (error) {
+      dispatch({
+        type: types.LOGIN_ERROR,
+        payload: error.response.data.msg,
+      });
+    }
+    setTimeout(() => {
+      dispatch({
+        type: types.LIMPIAR_MENSAJE,
+      });
+    }, 3000);
+  };
+
+  const cerrarSesion = () => {
+    dispatch({
+      type: types.CERRAR_SESION,
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -44,6 +98,9 @@ const AuthState = ({ children }) => {
         usuario: state.usuario,
         mensaje: state.mensaje,
         registrarUsuario,
+        iniciarSesion,
+        usuarioAutenticado,
+        cerrarSesion,
       }}
     >
       {children}

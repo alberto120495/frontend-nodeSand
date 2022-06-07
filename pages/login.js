@@ -3,10 +3,20 @@ import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import AuthContext from "../context/auth/authContext";
+import Alerta from "../components/Alerta";
+import { useRouter } from "next/router";
 
 function Login() {
   const authContext = useContext(AuthContext);
-  const { usuarioAutenticado } = authContext;
+  const { iniciarSesion, mensaje, autenticado } = authContext;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (autenticado) {
+      //Redireccionar al usuario
+      router.push("/");
+    }
+  }, [autenticado]);
 
   const formik = useFormik({
     initialValues: {
@@ -20,7 +30,7 @@ function Login() {
       password: Yup.string().required("La contraseña es requerida"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      iniciarSesion(values);
     },
   });
   return (
@@ -29,6 +39,8 @@ function Login() {
         <h2 className="text-4xl font-sans text-gray-800 text-center my-4">
           Iniciar Sesion
         </h2>
+        {mensaje && <Alerta />}
+
         <div className="flex justify-center mt-5">
           <div className="max-w-lg w-full">
             <form

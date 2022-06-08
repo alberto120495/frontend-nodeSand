@@ -2,15 +2,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { useContext } from "react";
 import AuthContext from "../context/auth/authContext";
+import AppContext from "../context/app/appContext";
 
 function Header() {
-  const authContext = useContext(AuthContext);
-  const { usuario, cerrarSesion } = authContext;
+  const { usuario, cerrarSesion } = useContext(AuthContext);
+
+  const { limpiarState } = useContext(AppContext);
+
+  const redireccionar = () => {
+    limpiarState();
+  };
 
   return (
     <header className="py-8 flex flex-col md:flex-row items-center justify-between">
       <Link href="/">
-        <a>
+        <a onClick={redireccionar}>
           <Image
             src="/logo.svg"
             width={200}

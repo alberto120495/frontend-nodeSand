@@ -26,6 +26,7 @@ export default function Reducer(state, action) {
       return {
         ...state,
         usuario: action.payload,
+        autenticado: true,
       };
     case types.CERRAR_SESION:
       localStorage.removeItem("token");

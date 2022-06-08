@@ -13,7 +13,11 @@ export default function Home() {
   const [copy, setCopy] = useState(false);
 
   useEffect(() => {
-    usuarioAutenticado();
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      usuarioAutenticado();
+    }
   }, []);
 
   return (

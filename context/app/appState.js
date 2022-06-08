@@ -74,6 +74,26 @@ function AppState({ children }) {
     }
   };
 
+  const limpiarState = () => {
+    dispatch({
+      type: types.LIMPIAR_STATE,
+    });
+  };
+
+  const agregarPassword = (password) => {
+    dispatch({
+      type: types.AGREGAR_PASSWORD,
+      payload: password,
+    });
+  };
+
+  const agregarDescargas = (descargas) => {
+    dispatch({
+      type: types.AGREGAR_DESCARGAS,
+      payload: descargas,
+    });
+  };
+
   return (
     <appContext.Provider
       value={{
@@ -88,6 +108,9 @@ function AppState({ children }) {
         mostrarAlerta,
         subirArchivo,
         crearEnlace,
+        limpiarState,
+        agregarPassword,
+        agregarDescargas,
       }}
     >
       {children}
